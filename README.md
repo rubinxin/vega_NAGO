@@ -101,7 +101,19 @@ By varying the graph generator hyperparameters and thus the connectivity propert
 Our proposed hierarchical graph-based search space allows us to represent a wide variety of neural architectures with a small number of continuous hyperparameters, making NAS amenable to a wide range of powerful BO methods. In this code package, we use the multi-fidelity [BOHB](https://arxiv.org/abs/1807.01774) approach, which uses partial evaluations with smaller-than-full budget in order to exclude bad configurations early in the search process, thus saving resources to evaluate more promising configurations and speeding up optimisation.
  Given the same time constraint, BOHB evaluates many more configurations than conventional BO which evaluates all configurations with full budget. Please refer to [hpo.md](./docs/en/algorithms/hpo.md) for more details on BOHB algorithm.
 
-## Other Useful Docs
+## 3. Citation
+Please cite our paper if you would like to use the code
+
+```
+@article{ru2020neural,
+  title={Neural Architecture Generator Optimization},
+  author={Ru, Binxin and Esperanca, Pedro and Carlucci, Fabio},
+  journal={arXiv preprint arXiv:2004.01395},
+  year={2020}
+}
+```
+
+## 4. Other Useful Docs
  For a Chinese version of the document on NAGO, please refer to [nago.md](./docs/cn/algorithms/nago.md). For more details on the VEGA package, please refer to `VEGA_README.md`. 
 
 
