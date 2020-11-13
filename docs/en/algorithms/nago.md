@@ -23,13 +23,13 @@ By varying the graph generator hyperparameters and thus the connectivity propert
 ### 2.3 Search Algorithm
 
 Our proposed hierarchical graph-based search space allows us to represent a wide variety of neural architectures with a small number of continuous hyperparameters, making NAS amenable to a wide range of powerful BO methods. In this code package, we use the multi-fidelity [BOHB](https://arxiv.org/abs/1807.01774) approach, which uses partial evaluations with smaller-than-full budget in order to exclude bad configurations early in the search process, thus saving resources to evaluate more promising configurations and speeding up optimisation.
- Given the same time constraint, BOHB evaluates many more configurations than conventional BO which evaluates all configurations with full budget. Please refer to `hpo.md` for more details on BOHB algorithm.
+ Given the same time constraint, BOHB evaluates many more configurations than conventional BO which evaluates all configurations with full budget. Please refer to [hpo.md](./docs/en/algorithms/hpo.md) for more details on BOHB algorithm.
 
 ## 4. User Guide
 
 ### 4.1 Search Space Configuration
 
-The search space of NAGO described above can be specified in the configuration file `nago.yaml` as follows.
+The search space of NAGO described above can be specified in the configuration file `nago.yml` as follows.
 
 ```yaml
 search_space:
@@ -49,7 +49,7 @@ search_space:
             range: [3, 10]
         -   key: network.custom.G2_P
             type: FLOAT
-            range: [0.1, 1.0]
+            range: [0.2, 1.0]
         -   key: network.custom.G3_nodes
             type: INT
             range: [3, 10]
@@ -61,12 +61,12 @@ search_space:
             range: [0.1, 1.0]
 ```
 
-Note despite we are using the NAS pipeline, we define the search space following HPO pipeline format as we use BOHB to perform the search.
-The exact code for the architecture generator (return a trainable PyTorch network model given a generator hyperparameter value) is `example/nago/nago.py`.
+Note despite we are using the NAS pipeline, we define the search space following HPO pipeline format as we use BOHB, which is a HPO method, to perform the search.
+The function class for defining the search space of NAGO (i.e. given the generator hyperparameters, we draw a sample architecture from the defined generator and convert it into a trainable PyTorch network model) is `nago.py` under `./zeus/networks/pytorch/customs/nago.py`.
 
 ### 4.2 Search Strategy
 
-Our NAGO search space is amenable to any Bayesian optimisation search strategies. In this code package, we use BOHB to perform the optimisation and the configuration of BOHB needs to be specified in `nago.yaml`. The example below defines a BOHB run with `eta=2` and `t=50` search iterations. The minimum and maxmimum training epochs used for evaluating a recommended configuration is 30 and 120 respectively.  
+Our NAGO search space is amenable to any Bayesian optimisation search strategies. In this code package, we use BOHB to perform the optimisation and the configuration of BOHB needs to be specified in `nago.yml`. The example below defines a BOHB run with `eta=2` and `t=50` search iterations; each iteration evaluate 7 configurations. The minimum and maxmimum training epochs used for evaluating a recommended configuration is 30 and 120 respectively.  
 
 ```yaml
 search_algorithm:
@@ -82,9 +82,9 @@ search_algorithm:
 
 ### 4.3 Run NAGO in VEGA
 
-- Install and set-up vega following the [instruction](https://github.com/huawei-noah/vega/blob/master/docs/en/user/install.md)
-- Define the NAGO configuration file `nago.yaml` as suggested above and put dataset at the `data_path` specified in `nago.yaml`
-- Run the command `python run_pipeline.py ./nago/nago.yaml pytorch`
+- Install and set-up vega following the [instruction](https://github.com/huawei-noah/vega/blob/master/docs/en/user/install.md). Note `MMDection` package is not needed for NAGO.
+- Define the NAGO configuration file `nago.yml` as suggested above and put dataset at the `data_path` specified in `nago.yml`
+- Run the command `cd ./examples & python3 run_pipeline.py ./nas/nago/nago.yml`
 
 ### 5. Output
 
@@ -92,3 +92,5 @@ The following two files are generated in the specified output directory (the def
 
 - The `output.csv` file contains the best architecture generator hyperparameters found by BOHB
 - The `reports.csv` file contains all the architecture generator hyperparameters queried by BOHB at different epoch.
+
+Note the exact validation accuracy of the architectures found during the search phase may be slightly lower than that reported in the paper because in VEGA, the batch size and learning rate needs to be prespecified and fixed for the network trainer but in our original code base, we will adjust the batch size to maximise the use of the GPU memory and scale the learning rate accordingly.  

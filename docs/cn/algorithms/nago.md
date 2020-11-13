@@ -28,7 +28,7 @@
 
 ### 4.1 搜索空间设置
 
-在 `nago.yaml` 文件中，NAGO的搜索空间可以用以下的方式来设定：
+在 `nago.yml` 文件中，NAGO的搜索空间可以用以下的方式来设定：
 
 ```yaml
 search_space:
@@ -48,7 +48,7 @@ search_space:
             range: [3, 10]
         -   key: network.custom.G2_P
             type: FLOAT
-            range: [0.1, 1.0]
+            range: [0.2, 1.0]
         -   key: network.custom.G3_nodes
             type: INT
             range: [3, 10]
@@ -61,11 +61,11 @@ search_space:
 ```
 
 注意虽然NAGO使用了VEGA中的NAS pipeline, 我们设定其搜索空间时，遵从的却是HPO pipeline的模板。因为我们使用了HPO中的BOHB方法来执行搜索。
-根据 `nago.yaml` 文件中的设置，我们通过 `example/nago/nago.py` 中的代码来生成有效的神经网络结构（即可以用PyTorch训练的神经网络模型）。
+根据 `nago.yml` 文件中的设置，我们通过 `./zeus/networks/pytorch/customs/nago.py` 中的代码来生成有效的神经网络结构（即可以用PyTorch训练的神经网络模型）。
 
 ### 4.2 搜索策略设置
 
-NAGO的搜索空间适用于任何贝叶斯优化算法。在VEGA中我们采用了BOHB, 所以我们需要在 `nago.yaml` 文件中也设置BOHB算法的基本参数。
+NAGO的搜索空间适用于任何贝叶斯优化算法。在VEGA中我们采用了BOHB, 所以我们需要在 `nago.yml` 文件中也设置BOHB算法的基本参数。
 例如，下面的设置会跑50个搜索循环的BOHB，并用最少30 epochs和最多120 epochs来训练和评估所生成的神经网络结构。
 
 ```yaml
@@ -83,8 +83,8 @@ search_algorithm:
 ### 4.3 在VEGA中运行NAGO
 
 - 按照[说明](https://github.com/huawei-noah/vega/blob/master/docs/en/user/install.md) 安装 vega
-- 按照以上描述通过 `nago.yaml` 定义NAGO的运行设置，并把任务数据集放到 `nago.yaml` 中 `data_path` 指定的位置
-- 运行命令 `python run_pipeline.py ./nago/nago.yaml pytorch`
+- 按照以上描述通过 `nago.yml` 定义NAGO的运行设置，并把任务数据集放到 `nago.yml` 中 `data_path` 指定的位置
+- 运行命令 `cd ./examples & python3 run_pipeline.py ./nas/nago/nago.yml`
 
 ### 5. 算法输出
 
