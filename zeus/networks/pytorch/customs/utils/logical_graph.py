@@ -8,6 +8,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # MIT License for more details.
 
+# modified by Robin Ru
+
 """LogicalGraph for NAGO."""
 import time
 import collections
@@ -156,6 +158,7 @@ class BasicNode:
     """Define a basic graph in our generator."""
 
     tollerance = 30
+    init_seed = 2
 
     def __init__(self, node_inputs, role, merging_strategy, inplanes, outplanes, incoming_planes):
         """Initialize BasicNode."""
@@ -175,9 +178,10 @@ class BasicNode:
         return role
 
     def _init_graph(self, graphparams):
-        init_seed = 0
+        BasicNode.init_seed += 1
         for x in range(BasicNode.tollerance):
-            graph = build_graph(graphparams, int(x + init_seed))
+            seed = int(100*x + BasicNode.init_seed)
+            graph = build_graph(graphparams, seed)
             self.graph = graph.copy()
             if nx.is_connected(self.graph) is not True:
                 continue
